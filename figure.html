@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+#version 300 es
+
+
+in vec4 aPosition;
+in vec4 aColor;
+in vec2 aTexCoord;
+
+out vec4 vColor;
+out vec2 vTexCoord;
+
+uniform vec3 uTheta;
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+
+void main()
+{
+  vec3 angles = radians(uTheta);
+    vec3 c = cos(angles);
+    vec3 s = sin(angles);
+
+ 
+    mat4 rx = mat4(1.0,  0.0,  0.0, 0.0,
+		    0.0,  c.x,  s.x, 0.0,
+		    0.0, -s.x,  c.x, 0.0,
+		    0.0,  0.0,  0.0, 1.0);
+
+    mat4 ry = mat4(c.y, 0.0, -s.y, 0.0,
+		    0.0, 1.0,  0.0, 0.0,
+		    s.y, 0.0,  c.y, 0.0,
+		    0.0, 0.0,  0.0, 1.0);
+
+
+    mat4 rz = mat4(c.z, s.z, 0.0, 0.0,
+		    -s.z,  c.z, 0.0, 0.0,
+		    0.0,  0.0, 1.0, 0.0,
+		    0.0,  0.0, 0.0, 1.0);
+
+
+        vColor = aColor;
+        vTexCoord =aTexCoord;
+     
+  //gl_Position= rz* ry *rx * aPosition
+  gl_Position.z = -gl_Position.z;
+
+    gl_Position = projectionMatrix * modelViewMatrix * rz *ry * rx * aPosition;
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+#version 300 es
+
+precision mediump float;
+
+in vec4 vColor;
+in vec2 vTexCoord;
+out vec4 fColor;
+
+uniform sampler2D uTex0;
+uniform sampler2D uTex1;
+void main()
+{
+  fColor = vColor*(texture(uTex0, vTexCoord)*texture(uTex1, vTexCoord));
+   // fColor = vec4(1.0, 0.0, 0.0, 1.0);
+
+}
+</script>
+
+<script type="text/javascript" src="./common/initShaders.js"></script>
+<script type="text/javascript" src="./common/MVne.js"></script>
+<script type="text/javascript" src="figure.js"></script>
+
+  <body>
+    <h1> Textured Figure</h1>
+    <table>
+    <tr>
+      <td>
+        <div>
+          torso angle -180 <input id="slider0" type="range"
+           min="-180" max="180" step="10" value="0"
+            />
+           180
+          </div><br/>
+          <div>
+          head2 angle -180 <input id="slider10" type="range"
+           min="-180" max="180" step="10" value="0"
+            />
+           180
+          </div><br/>
+
+          <div>
+          head1 angle -180 <input id="slider1" type="range"
+           min="-180" max="180" step="10" value="0"
+            />
+           180
+          </div><br/>
+
+          <div id="slider2">
+          left upper arm angle -180 <input id="slider2" type="range"
+           min="-180" max="180" step="10" value="0"
+            />
+           180
+          </div><br/>
+          <div>
+          left lower arm angle -180 <input id="slider3" type="range"
+           min="-180" max="180" step="10" value="0"
+            />
+           180
+          </div><br/>
+          <div>
+          right upper arm angle -180 <input id="slider4" type="range"
+           min="-180" max="180" step="10" value="0"
+            />
+           180
+          </div><br/>
+          <div>
+          right lower arm angle -180 <input id="slider5" type="range"
+           min="-180" max="180" step="10" value="0"
+            />
+           180
+          </div><br/>
+          <div>
+          left upper leg angle -180 <input id="slider6" type="range"
+           min="-180" max="180" step="10" value="0"
+            />
+           180
+          </div><br/>
+          <div>
+          left lower leg angle -180 <input id="slider7" type="range"
+           min="-180" max="180" step="10" value="0"
+            />
+           180
+          </div><br/>
+          <div>
+          right upper leg angle -180 <input id="slider8" type="range"
+           min="-180" max="180" step="10" value="0"
+            />
+           180
+          </div><br/>
+
+          <div>
+          right lower leg angle -180 <input id="slider9" type="range"
+           min="-180" max="180" step="10" value="0"
+            />
+           180
+          </div><br/>
+        </td>
+        <td>
+
+       
+<!-- <button id = "ButtonX">Rotate X</button>
+<button id = "ButtonY">Rotate Y</button>
+<button id = "ButtonZ">Rotate Z</button>
+<button id = "ButtonT">Toggle Rotation</button> -->
+          
+
+          <canvas id="gl-canvas" width="512" height="512">
+            Your browser does not support the HTML5 canvas element
+          </canvas>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

@@ -62,7 +62,7 @@ var texCoord = [
     vec2(1, 0)
 ];
 
-// constant  position of the  vertices defined for each triangle
+// constant  position of the  vertices defined
 const vertices = [
   vec4(-0.5, -0.5, 0.5, 1.0),
   vec4(-0.5, 0.5, 0.5, 1.0),
@@ -127,7 +127,7 @@ const figure = []
 
 const pointsArray = []
 
-//createing the texture map for a 2D element 
+//creating the texture map for a 2D element 
 function configureTexture() {
   texture1 = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, texture1);
@@ -275,8 +275,9 @@ var tBuffer = gl.createBuffer();
   render()
 }
 
+//initnode and createNode function allows creaton of the figure and 
+// the movement of each part of the figure using the slider 
 
-//initnode function allows the movement of each part of the figure using the slider 
 function initNodes (Id) {
   let m = mat4()
   switch (Id) {
@@ -335,6 +336,7 @@ function initNodes (Id) {
       break
   }
 }
+
 
 function createNode (transform, render, sibling, child) {
   const node = { transform, render, sibling, child }

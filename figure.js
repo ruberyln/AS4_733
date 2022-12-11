@@ -62,7 +62,7 @@ var texCoord = [
     vec2(1, 0)
 ];
 
-
+// constant  position of the  vertices defined for each triangle
 const vertices = [
   vec4(-0.5, -0.5, 0.5, 1.0),
   vec4(-0.5, 0.5, 0.5, 1.0),
@@ -73,6 +73,7 @@ const vertices = [
   vec4(0.5, 0.5, -0.5, 1.0),
   vec4(0.5, -0.5, -0.5, 1.0)
 ]
+//define varianles for the colors used in the figure 
 var vertexColors = [
   vec4(0.0, 0.0, 0.0, 1.0),  // black
   vec4(1.0, 0.0, 0.0, 1.0),  // red
@@ -85,7 +86,7 @@ var vertexColors = [
 ];
 
 
-
+//defininig the constants for parts of the figure
 const torsoId = 0
 const headId = 1
 const head1Id = 1
@@ -126,6 +127,7 @@ const figure = []
 
 const pointsArray = []
 
+//createing the texture map for a 2D element 
 function configureTexture() {
   texture1 = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, texture1);
@@ -153,7 +155,9 @@ window.onload = function init () {
   if (!gl) {
     alert('WebGL 2.0 is not available')
   }
+  //this represents the viewport on the window. 
   gl.viewport(0, 0, canvas.width, canvas.height)
+  // clear the color to give you deseired color RGBA
   gl.clearColor(0.9, 0.9, 0.9, 1.0)
   //  Load shaders and initialize attribute buffers
   program = initShaders(gl, 'vertex-shader', 'fragment-shader')
@@ -173,6 +177,7 @@ window.onload = function init () {
   }
 
   cube()
+  //create a buffer for color
   var cBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, flatten(colorsArray), gl.STATIC_DRAW);
@@ -181,6 +186,7 @@ window.onload = function init () {
   gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(colorLoc );
 
+//creates a vertex buffer 
   const vBuffer = gl.createBuffer()
   gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer)
   gl.bufferData(gl.ARRAY_BUFFER, flatten(positionsArray), gl.STATIC_DRAW)
@@ -189,6 +195,7 @@ window.onload = function init () {
   gl.vertexAttribPointer(positionLoc, 4, gl.FLOAT, false, 0, 0)
   gl.enableVertexAttribArray(positionLoc)
 
+// create a buffer for texture 
 var tBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, tBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, flatten(texCoordsArray), gl.STATIC_DRAW);
@@ -197,6 +204,8 @@ var tBuffer = gl.createBuffer();
     gl.vertexAttribPointer(texCoordLoc, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(texCoordLoc);
 
+
+    // call the configure texture function defined above 
     configureTexture();
 
     gl.activeTexture(gl.TEXTURE0);
@@ -210,7 +219,7 @@ var tBuffer = gl.createBuffer();
 
 
     thetaLoc = gl.getUniformLocation(program, "uTheta");
-
+// call the html slider elements from the html file using  document.getELementByID for each figure part
   document.getElementById('slider0').onchange = function (event) {
     theta[torsoId] = event.target.value
     initNodes(torsoId)
@@ -256,11 +265,6 @@ var tBuffer = gl.createBuffer();
     initNodes(head2Id)
   }
 
-  // document.getElementById("ButtonX").onclick = function(){axis = xAxis;};
-  // document.getElementById("ButtonY").onclick = function(){axis = yAxis;};
-  // document.getElementById("ButtonZ").onclick = function(){axis = zAxis;};
-  // document.getElementById("ButtonT").onclick = function(){flag = !flag;};
-
 
 
 
@@ -272,7 +276,7 @@ var tBuffer = gl.createBuffer();
 }
 
 
-
+//initnode function allows the movement of each part of the figure using the slider 
 function initNodes (Id) {
   let m = mat4()
   switch (Id) {
@@ -442,7 +446,7 @@ function rightLowerLeg () {
     gl.drawArrays(gl.TRIANGLE_FAN, 4 * i, 4)
   }
 }
-
+// the cube funtion used to create a cube from triangles
 function cube () {
   quad(1, 0, 3, 2)
   quad(2, 3, 7, 6)
@@ -452,6 +456,7 @@ function cube () {
   quad(5, 4, 0, 1)
 }
 
+// this function pushes the color, position and the texture into the figure element 
 function quad(a, b, c, d) {
   positionsArray.push(vertices[a]);
   colorsArray.push(vertexColors[a]);
@@ -479,11 +484,9 @@ function quad(a, b, c, d) {
 }
 
 
-
+//without this function your code will not display on the browser.
 function render () {
-  // gl.clear(gl.COLOR_BUFFER_BIT)
-  // theta[axis] += 2.0;
-  // gl.uniform3fv(thetaLoc, theta);
+ 
   gl.clear(gl.COLOR_BUFFER_BIT);
  
   traverse(torsoId)
